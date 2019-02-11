@@ -4,10 +4,11 @@ import { height, width } from '../../../constans'
 
 const DayCard = ({ data }) => {
   const { h1, container } = styles
-  const { main, name } = data
+  const { main: { temp }, name } = data
   return (
     <View style={container}>
       <Text style={h1}>{name}</Text>
+      <Text style={h1}>{temp}</Text>
     </View>
   )
 }
