@@ -5,10 +5,11 @@ import { height, width } from '../../../constans'
 const DayCard = ({ data }) => {
   const { h1, container } = styles
   const { main: { temp }, name } = data
+  console.log('data', data)
   return (
     <View style={container}>
       <Text style={h1}>{name}</Text>
-      <Text style={h1}>{temp}</Text>
+      <Text style={h1}>{temp - 273,15}</Text>
     </View>
   )
 }
