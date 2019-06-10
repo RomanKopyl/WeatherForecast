@@ -11,21 +11,40 @@ export default class App extends Component {
   state = {
     title: 'Weather Forecast',
     city: 'kremenchuk',
-    url: '',
-    data: {
-      main: {
-        temp: 0
-      }
-    }
+    data: null,
+    error: null
+    // url: '',
+    // data: {
+    //   main: {
+    //     temp: 0
+    //   }
+    // }
   }
 
-  componentDidMount = async() => {
+  async componentDidMount() {
+    await this.reloadData()
+  }
+
+  async onTextChanged(value) {
+    this.setState(
+      { city: value },
+      this.reloadData.bind(this)
+    )
+  }
+
+  async reloadData() {
     try {
       const url = url1 + this.state.city + url3
       console.log('url', this.url);
       const response = await fetch(url)
       const data = await response.json()
-      this.setState({ data })
+
+      if (data.cod != 200) {
+        this.setState({ error: data.message, data: null })
+      }
+      else {
+        this.setState({ data, error: null })
+      }
     } catch (e) {
       throw e
     }
@@ -34,17 +53,19 @@ export default class App extends Component {
   render() {
     console.log('state', this.state);
     console.log('url', this.url);
-    const { title, city, data } = this.state
+    const { title, city, data, error } = this.state
     return (
-      <View>
+      <View style={{backgroundColor: 'white', flex: 1}}>
         <Header title={title} />
         <TextInput
           style={{height: 40}}
           placeholder="Enter your city."
-          onChangeText={(city) => this.setState({city})}
-        />
+          onChangeText={this.onTextChanged.bind(this)}>
+            {city}
+          </TextInput>
         <View>
-          <DayCard data={data}/>
+          {data && (<DayCard data={data}/>)}
+          {error && (<Text>{error}</Text>)}
         </View>
       </View>
     )
